@@ -23,6 +23,7 @@ public class UrlService {
 		
 		UrlResponse response = new UrlResponse();
 		
+		//check if URL is valid - currently not checking this
 		if(!Validators.isValidUrl(originalUrl)) {
 			response.setResultMessage(ResponseConstants.INVALID_URL_ERROR);
 			return response;			
@@ -36,6 +37,9 @@ public class UrlService {
 	public UrlResponse shortenUrl(String originalUrl) {
 		
 		UrlResponse response = new UrlResponse();		
+		
+		//logic to get the current counter
+		//finds out the last record in the database and increments by 1.
 		Optional<UrlData> lastRecord = urlRepoService.getLastRecord();
 		
 		if(counter == 0) {
@@ -47,9 +51,9 @@ public class UrlService {
 			counter = rec.getId() + 1;
 			}
 		}
-				
-		String shortUrl = getShortUrlFromId(counter);
-		if(shortUrl != null) {
+		
+		try { // get short URL, create a new record with original URL and short URL
+			String shortUrl = getShortUrlFromId(counter);
 			response.setResultMessage(ResponseConstants.SUCCESS);
 			response.setResultUrl(shortUrl);
 			
@@ -63,8 +67,9 @@ public class UrlService {
 			
 			counter = counter + 1;
 		}
-		else {
+		catch(Exception e) {
 			response.setResultMessage(ResponseConstants.OTHER_ERROR);
+			System.out.println("Exception in shortenUrl :: Exception - " + e.getMessage());
 		}
 		
 		return response;
@@ -94,6 +99,7 @@ public class UrlService {
     
     public UrlResponse getOriginalUrl(String shortUrl) {
     	UrlResponse response = new UrlResponse();
+    	try {
     	int id = getIdFromShortUrl(shortUrl);
     	Optional<UrlData> urlData = urlRepoService.getOriginalUrlRecord(id);
     	if(urlData.isEmpty()) {
@@ -103,6 +109,11 @@ public class UrlService {
     	UrlData record = urlData.get();
     	response.setResultMessage(ResponseConstants.SUCCESS);
     	response.setResultUrl(record.getOriginalUrl());
+    	}
+    	catch(Exception e) {
+    		response.setResultMessage(ResponseConstants.OTHER_ERROR);
+			System.out.println("Exception in getOriginalUrl :: Exception - " + e.getMessage());
+    	}
     	return response;
     }
      

@@ -26,14 +26,16 @@ public class UrlController {
 	 */
 	@PostMapping("/getShortUrl")
 	public UrlResponse getShortUrl(@RequestParam String originalUrl) {
+		//should use HttpResponse or something similar
 		UrlResponse response = new UrlResponse();
 		try {
         response = urlService.getShortUrl(originalUrl);
         return response;
 		}
 		catch(Exception e) {
-			System.out.println("Some exception occurred. Exception - " + e.getMessage());
-			response.setResultMessage("Some unknown exception occurred.We are working to fix the problem.");
+			//should be logged
+			System.out.println("Exception occurred in getShortUrl :: Exception - " + e.getMessage());
+			response.setResultMessage("Some unknown exception has occurred.We are working to fix the problem.");
 			return response;
 		}
     }
@@ -45,7 +47,16 @@ public class UrlController {
 	 */
 	@GetMapping("/{shortUrl}")
 	public UrlResponse getOriginalUrl(@PathVariable String shortUrl){
-		UrlResponse urlResponse = urlService.getOriginalUrl(shortUrl);
-		return urlResponse;
+		UrlResponse response = new UrlResponse();
+		try{
+			response = urlService.getOriginalUrl(shortUrl);
+			return response;
+		}
+		catch(Exception e) {
+			//should be logged
+			System.out.println("Exception occurred in getOriginalUrl. Exception - " + e.getMessage());
+			response.setResultMessage("Some unknown exception has occurred.We are working to fix the problem.");
+			return response;
+		}
 	}
 }
