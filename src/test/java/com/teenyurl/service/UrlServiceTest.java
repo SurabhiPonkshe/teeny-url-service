@@ -49,7 +49,8 @@ public class UrlServiceTest {
 			when(urlRepoService.saveUrlData(Mockito.any())).thenReturn(Mockito.any());
 			
 			actualResponse = urlService.getShortUrl("www.google.com");
-			assertEquals(actualResponse,expectedResponse);
+			assertEquals(actualResponse.getResultMessage(),expectedResponse.getResultMessage());
+			assertEquals(actualResponse.getResultUrl(),expectedResponse.getResultUrl());
 		}
 		catch(Exception e) {
 			e.printStackTrace(); //log exception
@@ -67,7 +68,8 @@ public class UrlServiceTest {
 			when(urlRepoService.saveUrlData(Mockito.any())).thenReturn(Mockito.any());
 			
 			UrlResponse actualResponse = urlService.shortenUrl("www.google.com");
-			assertEquals(actualResponse,expectedResponse);
+			assertEquals(actualResponse.getResultMessage(),expectedResponse.getResultMessage());
+			assertEquals(actualResponse.getResultUrl(),expectedResponse.getResultUrl());
 		}
 		catch(Exception e) {
 			e.printStackTrace(); //log exception
@@ -85,7 +87,8 @@ public class UrlServiceTest {
 			when(urlRepoService.saveUrlData(Mockito.any())).thenReturn(Mockito.any());
 			
 			UrlResponse actualResponse = urlService.shortenUrl("www.google.com");
-			assertEquals(actualResponse,expectedResponse);
+			assertEquals(actualResponse.getResultMessage(),expectedResponse.getResultMessage());
+			assertEquals(actualResponse.getResultUrl(),expectedResponse.getResultUrl());
 		}
 		catch(Exception e) {
 			e.printStackTrace(); //log exception

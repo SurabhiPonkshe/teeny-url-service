@@ -1,12 +1,8 @@
 package com.teenyurl.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,27 +19,33 @@ public class UrlController {
 	@Autowired
 	UrlService urlService;
 		
+	/**
+	 * Function to generate a short URL from a given URL
+	 * @param originalUrl
+	 * @return shortUrl
+	 */
 	@PostMapping("/getShortUrl")
-	public ResponseEntity<?> getShortUrl(@RequestParam String originalUrl) {
-        UrlResponse response = urlService.getShortUrl(originalUrl);
-        return ResponseEntity.ok(response);
+	public UrlResponse getShortUrl(@RequestParam String originalUrl) {
+		UrlResponse response = new UrlResponse();
+		try {
+        response = urlService.getShortUrl(originalUrl);
+        return response;
+		}
+		catch(Exception e) {
+			System.out.println("Some exception occurred. Exception - " + e.getMessage());
+			response.setResultMessage("Some unknown exception occurred.We are working to fix the problem.");
+			return response;
+		}
     }
 	
-	@PostMapping("/{shortUrl}")
-	public ResponseEntity<?> getOriginalUrl(@PathVariable String shortUrl,HttpServletResponse response){
+	/**
+	 * Function to map the shortened URL to the original URL and redirect to it
+	 * @param shortUrl
+	 * @param response
+	 */
+	@GetMapping("/{shortUrl}")
+	public UrlResponse getOriginalUrl(@PathVariable String shortUrl){
 		UrlResponse urlResponse = urlService.getOriginalUrl(shortUrl);
-		String originalUrl = urlResponse.getResultUrl();
-		if(originalUrl != null) {
-			try {
-				response.sendRedirect(originalUrl);
-				return ResponseEntity.ok(urlResponse);
-			} catch (IOException e) {
-				e.printStackTrace(); //log the exception.
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-			}
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
+		return urlResponse;
 	}
 }
