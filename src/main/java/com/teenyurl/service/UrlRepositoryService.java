@@ -14,15 +14,16 @@ public class UrlRepositoryService {
 	@Autowired 
 	UrlRepository urlRepository;
 	
-	public Optional<UrlData> getLastRecord(){
-		return urlRepository.findTopByOrderByIdDesc();
-	}
+	public UrlData saveUrlData(UrlData urlData) {
+    	return urlRepository.save(urlData);
+    }
 	
 	public Optional<UrlData> getOriginalUrlRecord(int urlId) {
         return urlRepository.findById(urlId);
     }
-    
-    public UrlData saveUrlData(UrlData urlData) {
-    	return urlRepository.save(urlData);
-    }
+	
+	public Optional<UrlData> getLastRecord(){
+		return urlRepository.findTopByOrderByIdDesc();
+	}
+	    
 }

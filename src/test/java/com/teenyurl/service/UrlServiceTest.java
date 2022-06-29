@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.teenyurl.constants.ResponseConstants;
+import com.teenyurl.entity.UrlData;
 import com.teenyurl.model.UrlResponse;
 
 @SpringBootTest
@@ -22,22 +24,42 @@ public class UrlServiceTest {
 	
 	@Mock
 	UrlRepositoryService urlRepoService;
-	
+		
+	UrlData urlData;
 	UrlResponse expectedResponse;
+	UrlResponse actualResponse;
 	
-//	@BeforeAll
-//	public void setUp() {
-//		//urlData = new UrlData();
-//		expectedResponse = new UrlResponse();
-//	}
+	@Before
+	public void setUp() {
+		urlData = new UrlData();
+		urlData.setId(1);
+		urlData.setOriginalUrl("www.google.com");
+		urlData.setShortenedUrl("b");
+		expectedResponse = new UrlResponse();
+		actualResponse = new UrlResponse();
+	}
 	
 	@Test
-	public void shortenUrlTestEmptyDBCase() {
-//		urlData.setId(1);
-//		urlData.setOriginalUrl("https://www.google.com/");
-//		urlData.setShortenedUrl("b");
+	public void getShortUrlTestValidUrl() {
 		try {
-			expectedResponse = new UrlResponse();
+			expectedResponse.setResultMessage(ResponseConstants.SUCCESS);
+			expectedResponse.setResultUrl("c");
+			
+			when(urlRepoService.getLastRecord()).thenReturn(Optional.of(urlData));
+			when(urlRepoService.saveUrlData(Mockito.any())).thenReturn(Mockito.any());
+			
+			actualResponse = urlService.getShortUrl("www.google.com");
+			assertEquals(actualResponse,expectedResponse);
+		}
+		catch(Exception e) {
+			e.printStackTrace(); //log exception
+		}
+	}
+		
+	@Test
+	public void shortenUrlTestEmptyDBCase() {
+		
+		try {
 			expectedResponse.setResultMessage(ResponseConstants.SUCCESS);
 			expectedResponse.setResultUrl("b");
 			
@@ -55,6 +77,19 @@ public class UrlServiceTest {
 	@Test
 	public void shortenUrlTestNonEmptyDBCase() {
 		
+		try {
+			expectedResponse.setResultMessage(ResponseConstants.SUCCESS);
+			expectedResponse.setResultUrl("c");
+			
+			when(urlRepoService.getLastRecord()).thenReturn(Optional.of(urlData));
+			when(urlRepoService.saveUrlData(Mockito.any())).thenReturn(Mockito.any());
+			
+			UrlResponse actualResponse = urlService.shortenUrl("www.google.com");
+			assertEquals(actualResponse,expectedResponse);
+		}
+		catch(Exception e) {
+			e.printStackTrace(); //log exception
+		}
 	}
 
 	@Test
