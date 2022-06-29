@@ -1,2 +1,2 @@
-# Teeny-URL
+# teeny-url
  
