@@ -1,6 +1,6 @@
 # teeny-url 
 
-A simple URL shortening service
+A simple URL shortening service.
 
 Pre-requisites :
  1. Java 1.8
