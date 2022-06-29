@@ -1,5 +1,7 @@
-# teeny-url
- 
+# teeny-url 
+
+A simple URL shortening service
+
 Pre-requisites :
  1. Java 1.8
  2. Maven
